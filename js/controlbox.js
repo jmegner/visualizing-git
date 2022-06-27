@@ -494,6 +494,7 @@ function(_yargs, d3, demos) {
     },
 
     tag: function(args) {
+      // TODO: we should just list the tags
       if (args.length < 1) {
         this.info(
           'You need to give a tag name. ' +
@@ -504,15 +505,24 @@ function(_yargs, d3, demos) {
         return;
       }
 
-      while (args.length > 0) {
-        var arg = args.shift();
+      let isDelete = ['-d', '--delete'].includes(args[0]);
 
-        try {
-          this.getRepoView().tag(arg);
-        } catch (err) {
-          if (err.message.indexOf('already exists') === -1) {
-            throw new Error(err.message);
-          }
+      if(isDelete) {
+        if(args.length === 2) {
+          let tagName = args[1];
+          this.getRepoView().deleteTag(tagName);
+          return this;
+        } else {
+            throw new Error('In Visualizing-Git, you need to provide a single tagname after the -d/--delete flag.  In git, you can have multiple "-d someTag" arg pairs.');
+        }
+      } else {
+        let tagName = args[0];
+
+        if(args.length === 1 && tagName.indexOf('-') != 0) {
+          this.getRepoView().tag(tagName);
+          return this;
+        } else {
+            throw new Error('Visualizing-Git only supports "git tag TAGNAME" and "git tag -d TAGNAME".');
         }
       }
     },

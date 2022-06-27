@@ -1202,17 +1202,18 @@ define(['d3'], function() {
       }, this)
     },
 
-    branch: function(name, startCommit) {
+    branch: function(name, startCommit, branchOrTag) {
+      branchOrTag = branchOrTag || 'branch';
       if (!name || name.trim() === '') {
-        throw new Error('You need to give a branch name.');
+        throw new Error(`You need to give a ${branchOrTag} name.`);
       }
 
       if (name === 'HEAD') {
-        throw new Error('You cannot name your branch "HEAD".');
+        throw new Error(`You cannot name your ${branchOrTag} "HEAD".`);
       }
 
       if (this.branches.indexOf(name) > -1) {
-        throw new Error('Branch "' + name + '" already exists.');
+        throw new Error(`${branchOrTag}  "${name}" already exists.`);
       }
 
       var startPoint = this.getCommit(startCommit || 'head')
@@ -1225,7 +1226,7 @@ define(['d3'], function() {
     },
 
     tag: function(name) {
-      this.branch('[' + name + ']');
+      this.branch('[' + name + ']', null, 'tag');
     },
 
     deleteTag: function(name) {

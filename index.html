@@ -30,7 +30,7 @@
       <pre id='last-command' style='display: none;'></pre>
     </div>
   </div>
-  <button onclick='clearCache()' class="reset-button">Reset</button>
+  <button onclick='reset()' class="reset-button">Reset</button>
 
   <svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ev="http://www.w3.org/2001/xml-events" width="0" height="0">
@@ -50,18 +50,27 @@
   </svg>
 
   <script type="text/javascript">
+
+    function clearSavedState() {
+      if (window.localStorage) {
+        window.localStorage.removeItem('git-viz-snapshot')
+      }
+    }
+
+    function reset() {
+      const resetConfirmed = confirm('Are you sure you want to reset?')
+      if (resetConfirmed) {
+        clearSavedState();
+        location.reload();
+      }
+    }
+
     require(['explaingit', 'demos'], function (explainGit, demos) {
       function ready(fn) {
         if (document.readyState != 'loading') {
           fn();
         } else {
           document.addEventListener('DOMContentLoaded', fn);
-        }
-      }
-
-      function clearSavedState() {
-        if (window.localStorage) {
-          window.localStorage.removeItem('git-viz-snapshot')
         }
       }
 
@@ -136,17 +145,7 @@
         document.getElementById('last-command').style.display = 'block'
       }
     });
-    function clearCache() {
 
-      if (window.localStorage) {
-        const flag = confirm('are you sure you want to reset?')
-        if (flag) {
-          window.localStorage.removeItem('git-viz-snapshot')
-          location.reload()
-        }
-
-      }
-    }
   </script>
 </body>
 
